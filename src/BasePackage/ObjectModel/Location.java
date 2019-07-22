@@ -1,4 +1,4 @@
-package BasePackage;
+package BasePackage.ObjectModel;
 
 public enum Location {
     SPACESHIP("Космический корабль") ,

@@ -1,5 +1,7 @@
 package BasePackage;
 
+import BasePackage.ObjectModel.*;
+
 import java.io.File;
 
 public class Main {
@@ -18,9 +20,6 @@ public class Main {
         namelessSpaceman.addAction(defend);
         System.out.println(namelessPoliceman);
         System.out.println(namelessSpaceman);
-        CommandReaderAndExecutor readerAndExecutor = new CommandReaderAndExecutor(new HumanManager(getFileFromEnvironmentVariable()));
-        HumanManager collectionWithHumans = new HumanManager(getFileFromEnvironmentVariable());
-        readerAndExecutor.govern();
     }
 
 

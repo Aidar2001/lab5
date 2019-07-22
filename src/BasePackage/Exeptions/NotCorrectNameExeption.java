@@ -1,4 +1,4 @@
-package BasePackage;
+package BasePackage.Exeptions;
 
 public class NotCorrectNameExeption extends RuntimeException {
     private String name,msg;

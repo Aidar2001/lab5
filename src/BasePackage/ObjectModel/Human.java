@@ -1,12 +1,11 @@
-package BasePackage;
+package BasePackage.ObjectModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public class Human extends Creature  implements Comparable<Human>  {
+public class Human extends Creature implements Comparable<Human>  {
     private static int count = 0;
     private static int number = 1;
     private int id;
@@ -14,18 +13,18 @@ public class Human extends Creature  implements Comparable<Human>  {
     private List<IProfession> professions = new ArrayList<>();
     private Location location;
 
-    Human(String Name, Location location) {
+    public Human(String Name, Location location) {
         this(Name);
         setLocation(location);
     }
 
-    Human() {
+    public Human() {
         this("Безликий" + number);
         number++;
         this.id = ++count;
     }
 
-    Human(String Name) {
+    public Human(String Name) {
         super(Name);
         this.id = ++count;
     }

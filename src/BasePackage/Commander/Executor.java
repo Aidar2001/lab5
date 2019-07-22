@@ -1,27 +1,22 @@
-package BasePackage;
+package BasePackage.Commander;
 
-import java.util.*;
-import java.io.*;
-import java.util.stream.Collectors;
+import BasePackage.ObjectModel.Human;
 
-import org.xml.sax.*;
-import org.xml.sax.helpers.DefaultHandler;
-import javax.xml.parsers.*;
+import java.io.File;
+import java.util.Date;
+import java.util.Vector;
 
-public class HumanManager {
+public class Executor {
     private Vector<Human> humans;
     private Date dateOfInit;
-    private File inputCollectionFile;
+    private Human human;
 
-    HumanManager(File collectoinFile) {
-        XMLHandler handler = new XMLHandler(collectoinFile);
-        this.dateOfInit = new Date();
-        humans = new Vector<Human>();
-        humans.sort((o1, o2) -> o1.compareTo(o2));
-        inputCollectionFile = collectoinFile;
+    public Executor(Human human) {
+        this.human = human;
     }
 
-
+    public Executor() {
+    }
 
     public void info() {
         System.out.println("Коллекция типа Vector и содержит людей");

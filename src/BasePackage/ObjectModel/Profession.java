@@ -1,4 +1,7 @@
-package BasePackage;
+package BasePackage.ObjectModel;
+
+import BasePackage.Exeptions.NotCorrectNameExeption;
+import BasePackage.Exeptions.NotFoundNameException;
 
 import java.util.*;
 
@@ -7,7 +10,7 @@ public class Profession implements IProfession {
     private int id;
     private static int count = 0;
 
-    Profession(String professionName) {
+    public Profession(String professionName) {
         try {
             if (professionName == null) throw new NotFoundNameException();
         } catch (NotFoundNameException e) {

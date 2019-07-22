@@ -1,4 +1,7 @@
-package BasePackage;
+package BasePackage.ObjectModel;
+
+import BasePackage.Exeptions.NotCorrectNameExeption;
+import BasePackage.Exeptions.NotFoundNameException;
 
 public class Action implements IAction {
     private String actionName;
@@ -6,7 +9,7 @@ public class Action implements IAction {
     private static int count = 0;
 
 
-    Action(String NameAction) {
+    public Action(String NameAction) {
         try {
             setActionName(NameAction);
             id = ++count;

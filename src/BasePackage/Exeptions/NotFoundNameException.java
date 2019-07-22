@@ -1,9 +1,9 @@
-package BasePackage;
+package BasePackage.Exeptions;
 
 public class NotFoundNameException extends Exception {
     private String exc;
 
-    NotFoundNameException() {
+    public NotFoundNameException() {
         super();
     }
 

@@ -1,4 +1,7 @@
-package BasePackage;
+package BasePackage.ObjectModel;
+
+import BasePackage.Exeptions.NotCorrectNameExeption;
+import BasePackage.Exeptions.NotFoundNameException;
 
 public abstract class Creature{
     protected String name;
