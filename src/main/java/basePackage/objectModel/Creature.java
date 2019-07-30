@@ -3,7 +3,10 @@ package basePackage.objectModel;
 import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 public abstract class Creature{
+    @XmlAttribute
     protected String name;
 
     public Creature(String name) {

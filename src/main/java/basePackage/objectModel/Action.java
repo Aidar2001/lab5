@@ -3,11 +3,17 @@ package basePackage.objectModel;
 import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
 
-public class Action implements IAction {
-    private String actionName;
-    private int id;
-    private static int count = 0;
+import javax.xml.bind.annotation.XmlAttribute;
 
+public class Action implements IAction {
+    private static int count = 0;
+    @XmlAttribute
+    private String actionName;
+    @XmlAttribute
+    private int id;
+
+    public Action() {
+    }
 
     public Action(String NameAction) {
         try {

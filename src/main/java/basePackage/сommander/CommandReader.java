@@ -9,10 +9,10 @@ public class CommandReader {
         this.stringFromTerminal = stringFromTerminal;
     }
 
-    private String[] readCommand() {
+    private String readCommand() {
         Scanner consoleScanner = new Scanner(System.in);
         System.out.println("Введите команду");
-        String command = consoleScanner.nextLine().trim();
-        return command.split(" ", 2);
+        return consoleScanner.nextLine().trim();
+
     }
 }

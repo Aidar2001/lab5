@@ -69,6 +69,7 @@ public class Executor {
     }
 
     public void importFile(File file) {
+        // TODO fromXML
         this.file = file;
     }
 
@@ -78,6 +79,7 @@ public class Executor {
     }
 
     private void saveFile() {
+        //TODO Написать метод, toXML
 
     }
 }

@@ -1,12 +1,11 @@
 package basePackage.parsers;
 
 import basePackage.objectModel.Human;
+import basePackage.сommander.Command.*;
 import basePackage.сommander.Command;
-import basePackage.сommander.Command.Argument;
-import basePackage.сommander.Command.NameOfCommand;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 
 public class CommandParser {
@@ -21,7 +20,12 @@ public class CommandParser {
             String rawArgument = rawCommand.substring(rawCommand.indexOf(" ") + 1);
 
             Argument argument = command.new Argument();
-            argument.setHuman(mapper.readValue(rawArgument, Human.class));
+            if (rawNameOfCommand.equals("import")) {
+                File file = getFileByPath(rawArgument);
+                argument.setFile(file);
+            } else {
+                argument.setHuman(mapper.readValue(rawArgument, Human.class));
+            }
             command.setArgument(argument);
         }
 
@@ -29,6 +33,11 @@ public class CommandParser {
         command.setNameOfCommand(nameOfCommand);
 
         return command;
+
+    }
+
+    private File getFileByPath(String rawArgument) {
+        return new File(rawArgument);// TODO обработать исключения - абсолютный/относительный путь, dev/null, dev/zero, dev/random
 
     }
 }

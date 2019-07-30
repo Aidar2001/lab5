@@ -3,12 +3,18 @@ package basePackage.objectModel;
 import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import java.util.*;
 
 public class Profession implements IProfession {
-    private String professionName;
-    private int id;
     private static int count = 0;
+    @XmlAttribute
+    private String professionName;
+    @XmlAttribute
+    private int id;
+
+    public Profession() {
+    }
 
     public Profession(String professionName) {
         try {
