@@ -1,6 +1,5 @@
-package BasePackage.Commander;
+package basePackage.сommander;
 
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class CommandReader {

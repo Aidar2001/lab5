@@ -1,11 +1,12 @@
-package BasePackage;
+package basePackage;
 
-import BasePackage.ObjectModel.*;
+import basePackage.objectModel.*;
 
 import java.io.File;
 
 public class Main {
     public static void main(String[] args) {
+        // import + pathFile
         Human namelessPoliceman = new Human();
         Human namelessSpaceman = new Human("");
         namelessPoliceman.setLocation(Location.FOREST);

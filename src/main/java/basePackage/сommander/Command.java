@@ -1,7 +1,9 @@
-package BasePackage.Commander;
+package basePackage.сommander;
 
-import BasePackage.ObjectModel.Human;
-import lombok.*;
+import basePackage.objectModel.Human;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.File;
 
@@ -16,11 +18,13 @@ public class Command {
         INFO,
         REMOVE,
         ADD,
+        ADD_IF_MAX,
         REMOVE_FIRST,
         SHOW,
         REMOVE_GREATER,
         HELP,
-        IMPORT;
+        IMPORT,
+        EXIT
     }
 
     @Getter

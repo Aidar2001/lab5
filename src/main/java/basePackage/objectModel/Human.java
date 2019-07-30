@@ -1,4 +1,4 @@
-package BasePackage.ObjectModel;
+package basePackage.objectModel;
 
 import java.util.ArrayList;
 import java.util.Comparator;

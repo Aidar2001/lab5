@@ -1,4 +1,4 @@
-package BasePackage.ObjectModel;
+package basePackage.objectModel;
 
 public interface IAction {
     String getActionName();

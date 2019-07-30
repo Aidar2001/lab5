@@ -1,7 +1,7 @@
-package BasePackage.ObjectModel;
+package basePackage.objectModel;
 
-import BasePackage.Exeptions.NotCorrectNameExeption;
-import BasePackage.Exeptions.NotFoundNameException;
+import basePackage.exeptions.NotCorrectNameExeption;
+import basePackage.exeptions.NotFoundNameException;
 
 import java.util.*;
 

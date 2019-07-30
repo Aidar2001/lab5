@@ -1,4 +1,4 @@
-package BasePackage.Exeptions;
+package basePackage.exeptions;
 
 public class NotFoundNameException extends Exception {
     private String exc;
