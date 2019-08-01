@@ -6,7 +6,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class XMLParser {
     JAXBContext context;
@@ -19,10 +22,10 @@ public class XMLParser {
         }
     }
 
-    public void toXML(Humans humans, File file) throws JAXBException {
+    public void toXML(Humans humans, File file) throws JAXBException, IOException {
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-        marshaller.marshal(humans, file);
+        marshaller.marshal(humans, new BufferedWriter(new FileWriter(file)));
     }
 
     public Humans fromXML(File file) throws JAXBException {

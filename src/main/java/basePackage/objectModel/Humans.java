@@ -5,12 +5,12 @@ import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
+import java.util.Vector;
 
 @Getter
 @Setter
 @XmlRootElement
 public class Humans {
     @XmlElement(name = "human")
-    private List<Human> humans;
+    private Vector<Human> humans;
 }

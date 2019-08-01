@@ -1,19 +1,24 @@
 package basePackage.сommander;
 
 import basePackage.objectModel.Human;
+import basePackage.objectModel.Humans;
+import basePackage.parsers.XMLParser;
 
+import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 
 public class Executor {
-    private Vector<Human> humans;
+    XMLParser parser = new XMLParser();
     private Date dateOfInit;
     private File file;
+    private Vector<Human> humanVector;
 
     {
-        humans = new Vector<>();
+        humanVector = new Vector<>();
         dateOfInit = new Date();
         Runtime.getRuntime().addShutdownHook(new Thread(this::saveFile));
     }
@@ -21,38 +26,38 @@ public class Executor {
     public void info() {
         System.out.println("Коллекция типа Vector и содержит людей");
         System.out.println("Дата инициализации: " + dateOfInit);
-        System.out.println("Размер коллекции на данный момент: " + humans.size());
+        System.out.println("Размер коллекции на данный момент: " + humanVector.size());
     }
 
     public void remove(Human humanForRemove) {
-        if (humans.remove(humanForRemove))
+        if (humanVector.remove(humanForRemove))
             System.out.println("Элемент удалён");
         else
             System.out.println("Коллекция не содержит данный элемент");
     }
 
     public void add(Human human) {
-        humans.add(human);
-        Collections.sort(humans);
+        humanVector.add(human);
+        Collections.sort(humanVector);
         System.out.println("Элемент добавлен");
     }
 
     public void addIfMax(Human human) {
-        if (human.compareTo(humans.lastElement()) > 0)
+        if (human.compareTo(humanVector.lastElement()) > 0)
             add(human);
     }
 
     public void removeFirst() {
-        humans.remove(0);
+        humanVector.remove(0);
         System.out.println("Превый элемент коллекции удален");
     }
 
     public void show() {
-        humans.forEach(System.out::println);
+        humanVector.forEach(System.out::println);
     }
 
     public void removeGreater(Human human) {
-        humans.removeIf(element -> element.compareTo(human) > 0);
+        humanVector.removeIf(element -> element.compareTo(human) > 0);
     }
 
     public void help() {
@@ -69,17 +74,27 @@ public class Executor {
     }
 
     public void importFile(File file) {
-        // TODO fromXML
         this.file = file;
+        try {
+            this.humanVector = parser.fromXML(file).getHumans();
+        } catch (JAXBException e) {
+            System.out.println("Файл не может быть считан.");
+            exit();
+        }
     }
 
     public void exit() {
-// todo проверить сохранение файла
+        // todo проверить сохранение файла
         System.exit(0);
     }
 
     private void saveFile() {
-        //TODO Написать метод, toXML
-
+        Humans humans = new Humans();
+        humans.setHumans(this.humanVector);
+        try {
+            parser.toXML(humans, file);
+        } catch (JAXBException | IOException e) {
+            System.out.println("Ошибка при сохранении файла.");
+        }
     }
 }

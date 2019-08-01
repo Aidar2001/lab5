@@ -2,12 +2,20 @@ package basePackage.сommander;
 
 import basePackage.parsers.CommandParser;
 
+import java.io.IOException;
+
 public class CommandHandler {
     private CommandParser parser = new CommandParser();
     private Executor executor = new Executor();
 
     public void handle(String rawCommand) {
-        Command command = parser.parseCommand(rawCommand);
+        Command command = null;
+        try {
+            command = parser.parseCommand(rawCommand);
+        } catch (IOException e) {
+            System.out.println("Ошибка при обработке аргумента комманды.");
+            return;
+        }
         switch (command.getNameOfCommand()) {
             case INFO:
                 executor.info();
