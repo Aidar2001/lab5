@@ -3,9 +3,12 @@ package basePackage.objectModel;
 import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.util.*;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Profession implements IProfession {
     private static int count = 0;
     @XmlAttribute
