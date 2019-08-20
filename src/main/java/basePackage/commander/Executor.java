@@ -1,4 +1,4 @@
-package basePackage.сommander;
+package basePackage.commander;
 
 import basePackage.objectModel.Human;
 import basePackage.objectModel.Humans;
@@ -43,8 +43,12 @@ public class Executor {
     }
 
     public void addIfMax(Human human) {
-        if (human.compareTo(humanVector.lastElement()) > 0)
+        if (human.compareTo(humanVector.lastElement()) > 0) {
             add(human);
+            System.out.println("Элемент добавлен.");
+        } else {
+            System.out.println("Элемент не добавлен");
+        }
     }
 
     public void removeFirst() {
@@ -69,8 +73,7 @@ public class Executor {
                         "\tremove_greater {element}: удалить из коллекции все элементы, превышающие заданный\n" +
                         "\tshow: вывести в стандартный поток вывода все элементы коллекции в строковом представлении\n" +
                         "\tremove_first: удалить первый элемент из коллекции\n" +
-                        "\texit: выход из программы\n" +
-                        "\n");
+                        "\texit: завершение программы");
     }
 
     public void importFile(File file) {
@@ -84,7 +87,7 @@ public class Executor {
     }
 
     public void exit() {
-        // todo проверить сохранение файла
+        saveFile();
         System.exit(0);
     }
 

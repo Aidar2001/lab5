@@ -1,4 +1,4 @@
-package basePackage.сommander;
+package basePackage.commander;
 
 import basePackage.parsers.CommandParser;
 
@@ -15,7 +15,11 @@ public class CommandHandler {
         } catch (IOException e) {
             System.out.println("Ошибка при обработке аргумента комманды.");
             return;
+        } catch (IllegalArgumentException e) {
+            System.out.println("Введенна неизвестная комманда.");
+            return;
         }
+
         switch (command.getNameOfCommand()) {
             case INFO:
                 executor.info();

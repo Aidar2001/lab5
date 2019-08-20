@@ -1,19 +1,2 @@
-﻿<?xml version="1.0"?>
-<Humans>
-	<Human id=12 name=Петр>
-		<actions>Сидел, Стоит, Идет, Спит</actions>
-		<professions>Строитель, Программист</professions>
-	</Human>
-	<Human id=134 name=Иван>
-		<actions>Ест, Ходит, Бегает, Учится</actions>
-		<professions>Ученый, Полицейский</professions>
-	</Human>
-	<Human id=13 name=Тимур>
-		<actions>Прыгает, Плавает, Идет, Ест</actions>
-		<professions>Плавец</professions>
-	</Human>
-	<Human id=165 name=Василий>
-		<actions>Кричит, Поет, Жует, Бросает</actions>
-		<professions>Мерчендайзер, Таксист</professions>
-	</Human>
-</Humans>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<humans/>

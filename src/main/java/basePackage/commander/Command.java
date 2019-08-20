@@ -1,4 +1,4 @@
-package basePackage.сommander;
+package basePackage.commander;
 
 import basePackage.objectModel.Human;
 import lombok.Getter;
