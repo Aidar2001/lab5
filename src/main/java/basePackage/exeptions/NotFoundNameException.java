@@ -19,6 +19,6 @@ public class NotFoundNameException extends Exception {
 
     @Override
     public String toString() {
-        return "Исключение: не найдено имя ";
+        return "Exception: not found name ";
     }
 }

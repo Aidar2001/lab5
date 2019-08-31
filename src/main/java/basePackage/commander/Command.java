@@ -1,15 +1,11 @@
 package basePackage.commander;
 
 import basePackage.objectModel.Human;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
 import java.io.File;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class Command {
     private NameOfCommand nameOfCommand;
     private Argument argument;
@@ -27,8 +23,7 @@ public class Command {
         EXIT
     }
 
-    @Getter
-    @Setter
+    @Data
     public class Argument {
         private File file;
         private Human human;

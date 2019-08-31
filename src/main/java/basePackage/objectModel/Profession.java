@@ -31,9 +31,11 @@ public class Profession implements IProfession {
 
     @Override
     public String getProfession() {
-        if (professionName == null || professionName.matches("[a-zA-ZА-Яа-я]") || professionName.length() == 0)
-            return "Безработный";
-        else return professionName;
+        if (professionName == null || professionName.matches("[a-zA-ZА-Яа-я]") || professionName.length() == 0) {
+            return "Unemployed";
+        } else {
+            return professionName;
+        }
     }
 
     @Override
@@ -72,11 +74,11 @@ public class Profession implements IProfession {
         public void EducationLevel(String educationLevel) {
             class LevelsEducation {
                 private String typeEducation;
-                private Set<String> a = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList("Среднее общее ", "Полное среднее ", "Высшее ")));
+                private Set<String> a = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList("Secondary general education ","Full secondary ","Higher ")));
 
                 LevelsEducation(String typeEducation) {
                     this.typeEducation = typeEducation;
-                    if (!a.contains(typeEducation)) throw new NotCorrectNameExeption(typeEducation, "Образование может быть только трех типов:\"Среднее общее\", \"Полное среднее\", \"Высшее\"");;
+                    if (!a.contains(typeEducation)) throw new NotCorrectNameExeption(typeEducation, "Education can be only of three types: \"General secondary\", \"Full secondary\", \"Higher\"");;
                 }
 
 
@@ -84,7 +86,7 @@ public class Profession implements IProfession {
             LevelsEducation myEducationLevel = new LevelsEducation(educationLevel){
                 @Override
                 public String toString(){
-                return super.typeEducation+"образование";
+                return super.typeEducation+"education";
                 }
             };
         }

@@ -12,10 +12,6 @@ import java.io.IOException;
 public class CommandParser {
     private ObjectMapper mapper = new ObjectMapper();
 
-    {
-
-    }
-
     public Command parseCommand(String rawCommand) throws IOException {
         Command command = new Command();
 

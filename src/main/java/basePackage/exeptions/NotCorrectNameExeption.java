@@ -23,6 +23,6 @@ public class NotCorrectNameExeption extends RuntimeException {
     @Override
     public String toString() {
         if(this.msg!=null){
-        return "Исключение: не корректное имя -- \""+name+"\"."+"\nПояснение: "+msg;
-    } else {return "Исключение: не корректное имя -- \""+name+"\".";}}
+        return "Exception: not correct name -- \""+name+"\"."+"\nExplanation: "+msg;
+    } else {return "Exception: not correct name -- \""+name+"\"";}}
 }

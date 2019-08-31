@@ -12,25 +12,27 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Human extends Creature implements Comparable<Human> {
     private static int count = 0;
     private static int number = 1;
+
     @XmlAttribute
     @Getter
     private int id;
+
     @Getter
     @Setter
     @XmlElement(name = "action", type = Action.class)
     private List<IAction> actions = new ArrayList<>();
+
     @Getter
     @Setter
     @XmlElement(name = "profession", type = Profession.class)
     private List<IProfession> professions = new ArrayList<>();
+
     @Setter
     @XmlElement
     private Location location;
@@ -41,7 +43,7 @@ public class Human extends Creature implements Comparable<Human> {
     }
 
     public Human() {
-        this("Безликий" + number);
+        this("Nameless human" + number);
         number++;
         this.id = ++count;
     }
@@ -53,14 +55,14 @@ public class Human extends Creature implements Comparable<Human> {
 
     public boolean addProfession(IProfession profession) {
         if (professions.add(profession) & profession.getProfession() != null) {
-            System.out.println("Человеку - " + this.name + " успешно присвоена профессия " + profession.getProfession());
+            System.out.println("Human " + this.name + " successfully was assigned profession " + profession.getProfession());
             return true;
         } else {
             if (profession.getProfession() == null) {
-                System.out.println("Человеку - " + this.name + " не может быть присвоена неинициализированная профессия");
+                System.out.println("Human " + this.name + " can not be assigned uninitialized profession");
                 return false;
             } else {
-                System.out.println("При добавлении профессии произошла ошибка...");
+                System.out.println("Error happened while adding a profession...");
                 return false;
             }
         }
@@ -68,10 +70,10 @@ public class Human extends Creature implements Comparable<Human> {
 
     public boolean addAction(IAction action) {
         if (actions.add(action)) {
-            System.out.println("Человеку - \"" + this.name + "\" успешно присвоено действие " + action.getActionName());
+            System.out.println("Human \"" + this.name + "\" is successfully assigned action " + action.getActionName());
             return true;
         } else {
-            System.out.println("При добавлении действия произошла ошибка...");
+            System.out.println("Error happened while adding a action...");
             return false;
         }
     }

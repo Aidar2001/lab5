@@ -13,10 +13,10 @@ public class CommandHandler {
         try {
             command = parser.parseCommand(rawCommand);
         } catch (IOException e) {
-            System.out.println("Ошибка при обработке аргумента комманды.");
+            System.out.println("Error with processing command argument");
             return;
         } catch (IllegalArgumentException e) {
-            System.out.println("Введенна неизвестная комманда.");
+            System.out.println("Unknown command");
             return;
         }
 

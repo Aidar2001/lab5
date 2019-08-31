@@ -1,14 +1,13 @@
 package basePackage.objectModel;
 
+import lombok.AllArgsConstructor;
+
 import javax.xml.bind.annotation.XmlEnum;
 
+@AllArgsConstructor
 @XmlEnum
 public enum Location {
-    SPACESHIP("Космический корабль"),
-    FOREST("Лес");
+    SPACESHIP("Spaceship"),
+    FOREST("Forest");
     private String locationName;
-
-    Location(String locationName) {
-        this.locationName = locationName;
-    }
 }

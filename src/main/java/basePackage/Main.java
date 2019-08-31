@@ -52,7 +52,7 @@ public class Main {
     private static String getPathFromEnvironmentVariable() {
         String collectionPath = System.getenv("HUMAN_PATH");
         if (collectionPath == null) {
-            System.out.println("Путь должен передаваться через переменную окружения HUMAN_PATH");
+            System.out.println("Path should be passed via environment variable HUMAN_PATH");
             System.exit(1);
             return null;
         } else {
