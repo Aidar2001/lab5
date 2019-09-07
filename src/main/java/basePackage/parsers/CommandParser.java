@@ -9,9 +9,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * This class parse command from console and use for this <code>ObjectMapper</code>.
+ */
 public class CommandParser {
     private ObjectMapper mapper = new ObjectMapper();
 
+    /**
+     * @param rawCommand
+     * @return object of {@link Command}
+     * @throws IOException if method can not deserialize argument of entered command
+     */
     public Command parseCommand(String rawCommand) throws IOException {
         Command command = new Command();
 
@@ -38,7 +46,7 @@ public class CommandParser {
     }
 
     private File getFileByPath(String rawArgument) {
-        return new File(rawArgument);//TODO обработать исключения - абсолютный/относительный путь, dev/null, dev/zero, dev/random
+        return new File(rawArgument);
 
     }
 }

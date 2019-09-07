@@ -9,6 +9,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Vector;
 
+/**
+ * Class save humans on <code>Vector<Human></code>.
+ *
+ * @see Human
+ */
 @Getter
 @Setter
 @XmlRootElement

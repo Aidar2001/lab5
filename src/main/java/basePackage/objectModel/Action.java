@@ -7,11 +7,22 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 
+/**
+ * This is object model class with actions for human. It implemented IAction
+ *
+ * @see Human
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Action implements IAction {
     private static int count = 0;
+
+    /**
+     * Name of action
+     */
     @XmlAttribute
     private String actionName;
+
+    /** id to identify actions*/
     @XmlAttribute
     private int id;
 
@@ -55,9 +66,13 @@ public class Action implements IAction {
         }
         this.actionName = actionName;
     }
+
     @Override
     public String toString() {
-        return getActionName();
+        return "Action{" +
+                "actionName='" + actionName + '\'' +
+                ", id=" + id +
+                '}';
     }
 
     @Override

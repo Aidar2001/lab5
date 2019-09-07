@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * General class of my object model. Extends extends <code>Creature</code> and implements <code>Comparable<Human></code>
+ *
+ * @see Creature
+ */
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,22 +28,35 @@ public class Human extends Creature implements Comparable<Human> {
     @Getter
     private int id;
 
+    /**
+     * List of IActions
+     *
+     * @see IAction
+     * @see Action
+     */
     @Getter
     @Setter
     @XmlElement(name = "action", type = Action.class)
     private List<IAction> actions = new ArrayList<>();
 
+    /**
+     * List of IProfessions
+     *
+     * @see IProfession
+     * @see Profession
+     */
     @Getter
     @Setter
     @XmlElement(name = "profession", type = Profession.class)
     private List<IProfession> professions = new ArrayList<>();
 
+
     @Setter
     @XmlElement
     private Location location;
 
-    public Human(String Name, Location location) {
-        this(Name);
+    public Human(String name, Location location) {
+        this(name);
         setLocation(location);
     }
 
@@ -48,11 +66,20 @@ public class Human extends Creature implements Comparable<Human> {
         this.id = ++count;
     }
 
-    public Human(String Name) {
-        super(Name);
+    /**
+     * @param name name of human
+     */
+    public Human(String name) {
+        super(name);
         this.id = ++count;
     }
 
+    /**
+     * Add new profession to list professions
+     *
+     * @param profession object of class implements {@link IProfession}
+     * @return true if element added, false if element didn't add
+     */
     public boolean addProfession(IProfession profession) {
         if (professions.add(profession) & profession.getProfession() != null) {
             System.out.println("Human " + this.name + " successfully was assigned profession " + profession.getProfession());
@@ -68,6 +95,12 @@ public class Human extends Creature implements Comparable<Human> {
         }
     }
 
+    /**
+     * Add new action to list actions
+     *
+     * @param action object of class implements {@link IAction}
+     * @return true if element added, false if element didn't add
+     */
     public boolean addAction(IAction action) {
         if (actions.add(action)) {
             System.out.println("Human \"" + this.name + "\" is successfully assigned action " + action.getActionName());

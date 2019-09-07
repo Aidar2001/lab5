@@ -11,8 +11,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Vector;
 
+/**
+ * This class execute commands.
+ */
 public class Executor {
-    XMLParser parser;
+    private XMLParser parser;
     private Date dateOfInit;
     private File file;
     private Vector<Human> humanVector;
@@ -58,6 +61,7 @@ public class Executor {
     }
 
     public void show() {
+
         humanVector.forEach(System.out::println);
     }
 
@@ -83,13 +87,24 @@ public class Executor {
             this.humanVector = parser.fromXML(file).getHumans();
         } catch (JAXBException e) {
             System.out.println("File can not be read");
-            exit();
+            exit(1);
+        }
+
+        if (humanVector == null) {
+            System.out.println("XML file is empty. Please add Humans to XML or enter at \"PATH_TO_COLLECTION\" path to correct XML.");
+            exit(1);
+
         }
     }
 
     public void exit() {
         saveFile();
         System.exit(0);
+    }
+
+    public void exit(int status) {
+        saveFile();
+        System.exit(status);
     }
 
     private void saveFile() {

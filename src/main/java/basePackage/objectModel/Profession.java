@@ -2,17 +2,25 @@ package basePackage.objectModel;
 
 import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import java.util.*;
 
+/**
+ * It's class professions. It implement Iprofession
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Profession implements IProfession {
     private static int count = 0;
+
     @XmlAttribute
     private String professionName;
+
     @XmlAttribute
     private int id;
 
@@ -29,6 +37,10 @@ public class Profession implements IProfession {
         id = ++count;
     }
 
+    /**
+     *
+     * @return <code>professionName</code> or string "Unemployed" if <code>professionName</code> not initialized
+     */
     @Override
     public String getProfession() {
         if (professionName == null || professionName.matches("[a-zA-ZА-Яа-я]") || professionName.length() == 0) {
@@ -56,20 +68,12 @@ public class Profession implements IProfession {
         return getProfession();
     }
 
+
+    @AllArgsConstructor
+    @Setter
+    @Getter
     public static class Education {
         private String speciality;
-
-        Education(String speciality) {
-            this.speciality = speciality;
-        }
-
-        public String getSpeciality() {
-            return speciality;
-        }
-
-        public void setSpeciality(String speciality) {
-            this.speciality = speciality;
-        }
 
         public void EducationLevel(String educationLevel) {
             class LevelsEducation {
@@ -86,7 +90,7 @@ public class Profession implements IProfession {
             LevelsEducation myEducationLevel = new LevelsEducation(educationLevel){
                 @Override
                 public String toString(){
-                return super.typeEducation+"education";
+                    return super.typeEducation+"education";
                 }
             };
         }
