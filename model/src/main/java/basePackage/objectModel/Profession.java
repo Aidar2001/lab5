@@ -15,11 +15,13 @@ import java.util.*;
  * It's class professions. It implement Iprofession
  */
 @XmlAccessorType(XmlAccessType.FIELD)
+@AllArgsConstructor
+@Getter
 public class Profession implements IProfession {
     private static int count = 0;
 
     @XmlAttribute
-    private String professionName;
+    private String profession;
 
     @XmlAttribute
     private int id;
@@ -27,13 +29,13 @@ public class Profession implements IProfession {
     public Profession() {
     }
 
-    public Profession(String professionName) {
+    public Profession(String profession) {
         try {
-            if (professionName == null) throw new NotFoundNameException();
+            if (profession == null) throw new NotFoundNameException();
         } catch (NotFoundNameException e) {
             e.printStackTrace();
         }
-        this.professionName = professionName;
+        this.profession = profession;
         id = ++count;
     }
 
@@ -43,10 +45,10 @@ public class Profession implements IProfession {
      */
     @Override
     public String getProfession() {
-        if (professionName == null || professionName.matches("[a-zA-ZА-Яа-я]") || professionName.length() == 0) {
+        if (profession == null || profession.matches("[a-zA-ZА-Яа-я]") || profession.length() == 0) {
             return "Unemployed";
         } else {
-            return professionName;
+            return profession;
         }
     }
 
@@ -55,12 +57,12 @@ public class Profession implements IProfession {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Profession profession = (Profession) o;
-        return professionName.equals(profession.professionName);
+        return this.profession.equals(profession.profession);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(professionName, id);
+        return Objects.hash(profession, id);
     }
 
     @Override
