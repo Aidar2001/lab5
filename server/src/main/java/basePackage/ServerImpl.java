@@ -2,12 +2,15 @@ package basePackage;
 
 import basePackage.connect.Request;
 import basePackage.connect.RequestResult;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +25,7 @@ public class ServerImpl implements Server {
     }
 
     public void start(int port) throws IOException {
-        if (server != null || server.isBound()) {
+        if (server != null && server.isBound()) {
             throw new IllegalStateException();
         }
         server = new ServerSocket(port);
@@ -38,7 +41,7 @@ public class ServerImpl implements Server {
                 }
             }
 
-        });
+        }).start();
     }
 
     @Override
@@ -49,8 +52,18 @@ public class ServerImpl implements Server {
     private class SocketRunnable implements Runnable {
         private Executor executor;
         private Socket socket;
-        private ObjectInputStream in;
-        private ObjectOutputStream out;
+
+        private ObjectMapper mapper;
+
+        private CharsetEncoder encoder;
+        private CharsetDecoder decoder;
+
+        {
+            mapper = new ObjectMapper().registerModules();
+
+            encoder = StandardCharsets.UTF_8.newEncoder();
+            decoder = StandardCharsets.UTF_8.newDecoder();
+        }
 
         public SocketRunnable(Executor executor, Socket socket) {
             this.executor = executor;
@@ -70,7 +83,7 @@ public class ServerImpl implements Server {
                     break;
                 }
                 try {
-                    Request request = (Request) in.readObject();
+                    Request request = readClient();
                     NameOfCommand command = NameOfCommand.valueOf(request.getSignature());
                     switch (command){
                         case INFO:
@@ -90,15 +103,16 @@ public class ServerImpl implements Server {
                         case HELP:
                             break;
                         case IMPORT:
-                            request.getData().stream().forEach((human)->{executor.add(human);});
-                            out.writeObject(RequestResult.createSuccessResult());
-                            out.flush();
+                            request.getData().stream()
+                                   .peek(System.out::println) // TODO: Just for debugging. Remove later
+                                   .forEach((human)->{executor.add(human);});
+                            sendResponse(RequestResult.createSuccessResult());
                             break;
                         case EXIT:
                             break;
                     }
 
-                } catch (IOException | ClassNotFoundException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     break;
                 }
@@ -107,10 +121,37 @@ public class ServerImpl implements Server {
         }
 
         private void init() throws IOException {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            in = new ObjectInputStream(socket.getInputStream());
-            out.writeObject(RequestResult.createSuccessResult());
-            out.flush();
+            sendResponse(RequestResult.createSuccessResult());
+        }
+
+        private <T> void sendResponse(RequestResult<T> result) throws IOException {
+            String json = mapper.writeValueAsString(result);
+            ByteBuffer charset = encoder.encode(CharBuffer.wrap(json));
+            ByteBuffer amount = ByteBuffer.allocate(4).putInt(charset.capacity());
+
+            socket.getOutputStream().write(amount.array());
+            socket.getOutputStream().write(charset.array());
+        }
+
+        private Request readClient() throws IOException {
+            ByteBuffer amount = ByteBuffer.allocate(4);
+
+            int totalRead = 0;
+            while(totalRead != Integer.BYTES) {
+                int read = socket.getInputStream().read(amount.array(), totalRead, (Integer.BYTES - totalRead));
+                totalRead += read;
+            }
+
+            amount.rewind();
+
+            int jsonLength = amount.getInt();
+
+            ByteBuffer jsonBuffer = ByteBuffer.allocate(jsonLength);
+            socket.getInputStream().read(jsonBuffer.array());
+
+            String json = decoder.decode(jsonBuffer).toString();
+
+            return mapper.readValue(json, Request.class);
         }
     }
 }

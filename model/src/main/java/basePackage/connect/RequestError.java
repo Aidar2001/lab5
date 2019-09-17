@@ -11,7 +11,11 @@ import java.util.stream.Stream;
 @Getter
 public enum RequestError {
     SOCKET_CONNECTION_ERROR(1),
-    FILE_PARSE_ERROR(2);
+    FILE_PARSE_ERROR(2),
+    IO_ERROR(3),
+
+    // Server errors
+    JSON_PARSE_ERROR(4);
 
     private static Map<Integer, RequestError> errorCodeToError = Stream.of(RequestError.values())
             .collect(Collectors.toMap(RequestError::getErrorCode, error -> error));

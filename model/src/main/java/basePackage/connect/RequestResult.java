@@ -10,7 +10,7 @@ import lombok.experimental.Wither;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestResult<T> {
-    private boolean success;
+    private Boolean success;
     private T result;
     private RequestError error;
     private Exception exception;
@@ -37,6 +37,7 @@ public class RequestResult<T> {
     public static <T> RequestResult<T> createFailResult(Exception ex) {
         return new RequestResult<T>()
                 .withSuccess(false)
+                .withException(ex)
                 .withResult(null);
     }
 
