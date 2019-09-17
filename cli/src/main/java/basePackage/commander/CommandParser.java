@@ -1,8 +1,7 @@
 package basePackage.commander;
 
-import basePackage.commander.Command;
-import basePackage.commander.Command.Argument;
-import basePackage.commander.Command.NameOfCommand;
+import basePackage.NameOfCommand;
+import basePackage.commander.Command.*;
 import basePackage.objectModel.Human;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,6 +36,7 @@ public class CommandParser {
             }
             command.setArgument(argument);
         }
+
 
         NameOfCommand nameOfCommand = NameOfCommand.valueOf(rawNameOfCommand.toUpperCase());
         command.setNameOfCommand(nameOfCommand);

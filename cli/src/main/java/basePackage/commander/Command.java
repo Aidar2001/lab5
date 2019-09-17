@@ -1,5 +1,6 @@
 package basePackage.commander;
 
+import basePackage.NameOfCommand;
 import basePackage.objectModel.Human;
 import lombok.Data;
 
@@ -17,19 +18,6 @@ public class Command {
     /**Argument command (add <strong>{element}</strong>)*/
     private Argument argument;
 
-    /**Enum with all commands (name of commands).*/
-    public enum NameOfCommand {
-        INFO,
-        REMOVE,
-        ADD,
-        ADD_IF_MAX,
-        REMOVE_FIRST,
-        SHOW,
-        REMOVE_GREATER,
-        HELP,
-        IMPORT,
-        EXIT
-    }
 
     /**Class command argument. Command argument may be file if entered "import", or Human if entered another command with argument.*/
     @Data

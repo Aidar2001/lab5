@@ -1,4 +1,4 @@
-package basePackage.commander;
+package basePackage;
 
 import basePackage.objectModel.Human;
 import basePackage.objectModel.Humans;
