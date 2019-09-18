@@ -93,13 +93,20 @@ public class ClientImpl implements Client {
 
   private synchronized <T> RequestResult<T> sendRequest(Request request) {
     try {
+      // map request to json
       String json = mapper.writeValueAsString(request);
-      ByteBuffer charset = encoder.encode(CharBuffer.wrap(json));
-      ByteBuffer amount = ByteBuffer.allocate(4).putInt(charset.capacity());
 
+      // convert string into charset byte buffer
+      ByteBuffer charset = encoder.encode(CharBuffer.wrap(json));
+
+      // size of charset byte buffer
+      ByteBuffer amount = ByteBuffer.allocate(Integer.BYTES).putInt(charset.capacity());
+
+      // write size of charset and then the charset bytes
       socket.getOutputStream().write(amount.array());
       socket.getOutputStream().write(charset.array());
 
+      // read server response
       return readServer();
     } catch (JsonProcessingException e) {
       return RequestResult.createFailResult(e, JSON_PARSE_ERROR.getErrorCode());
@@ -110,23 +117,28 @@ public class ClientImpl implements Client {
 
   private synchronized <T> RequestResult<T> readServer() {
     try {
-      ByteBuffer amount = ByteBuffer.allocate(4);
+      ByteBuffer amount = ByteBuffer.allocate(Integer.BYTES);
 
       int totalRead = 0;
-      while(totalRead != Integer.BYTES) {
-        int read = socket.getInputStream().read(amount.array(), totalRead, (Integer.BYTES - totalRead));
+      // read size of charset
+      while(totalRead != amount.capacity()) {
+        int read = socket.getInputStream().read(amount.array(), totalRead, (amount.capacity() - totalRead));
         totalRead += read;
       }
-
-      amount.rewind();
-
       int jsonLength = amount.getInt();
 
       ByteBuffer jsonBuffer = ByteBuffer.allocate(jsonLength);
-      socket.getInputStream().read(jsonBuffer.array());
+      totalRead = 0;
+      // read charset bytes unit all bytes are read
+      while(totalRead != jsonBuffer.capacity()) {
+        int read = socket.getInputStream().read(jsonBuffer.array(), totalRead, (jsonBuffer.capacity() - totalRead));
+        totalRead += read;
+      }
 
+      // convert charset bytes into string
       String json = decoder.decode(jsonBuffer).toString();
 
+      // map json string into request result
       return mapper.readValue(json, RequestResult.class);
     } catch (IOException e) {
       return RequestResult.createFailResult(e, IO_ERROR.getErrorCode());

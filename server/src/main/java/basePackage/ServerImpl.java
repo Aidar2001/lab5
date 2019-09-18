@@ -125,32 +125,46 @@ public class ServerImpl implements Server {
         }
 
         private <T> void sendResponse(RequestResult<T> result) throws IOException {
+            // convert request result into json string
             String json = mapper.writeValueAsString(result);
-            ByteBuffer charset = encoder.encode(CharBuffer.wrap(json));
-            ByteBuffer amount = ByteBuffer.allocate(4).putInt(charset.capacity());
 
+            // get byte buffer from json string
+            ByteBuffer charset = encoder.encode(CharBuffer.wrap(json));
+
+            // byte buffer holding the size of charset
+            ByteBuffer amount = ByteBuffer.allocate(Integer.BYTES).putInt(charset.capacity());
+
+            // send size of charset
             socket.getOutputStream().write(amount.array());
+            // and then send charset
             socket.getOutputStream().write(charset.array());
         }
 
         private Request readClient() throws IOException {
-            ByteBuffer amount = ByteBuffer.allocate(4);
+            // byte buffer storing the size of input charset
+            ByteBuffer amount = ByteBuffer.allocate(Integer.BYTES);
 
+            // read size of input charset into byte buffer
             int totalRead = 0;
-            while(totalRead != Integer.BYTES) {
-                int read = socket.getInputStream().read(amount.array(), totalRead, (Integer.BYTES - totalRead));
+            // loop until read 4 bytes (size of input charset)
+            while(totalRead != amount.capacity()) {
+                int read = socket.getInputStream().read(amount.array(), totalRead, (amount.capacity() - totalRead));
                 totalRead += read;
             }
-
-            amount.rewind();
-
             int jsonLength = amount.getInt();
 
             ByteBuffer jsonBuffer = ByteBuffer.allocate(jsonLength);
-            socket.getInputStream().read(jsonBuffer.array());
+            totalRead = 0;
+            // loop until read all bytes of charset
+            while (totalRead != jsonBuffer.capacity()) {
+                int read = socket.getInputStream().read(jsonBuffer.array(), totalRead, (jsonBuffer.capacity() - totalRead));
+                totalRead += read;
+            }
 
+            // request json representation
             String json = decoder.decode(jsonBuffer).toString();
 
+            // mapping json to request object
             return mapper.readValue(json, Request.class);
         }
     }

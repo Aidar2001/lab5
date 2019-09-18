@@ -9,7 +9,6 @@ public class ClientMain {
   private static final int SERVER_PORT = 6123;
 
     private static final String PATH_TO_HUMANS_COLLECTION = "DEFINE PATH TO humans.xml HERE";
-//  private static final String PATH_TO_HUMANS_COLLECTION = "/home/pihanya/Downloads/Lab_5/humans.xml";
 
   public static void main(String[] args) {
     Client client = new ClientImpl();
