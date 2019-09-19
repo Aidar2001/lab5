@@ -29,9 +29,9 @@ public class Action implements IAction {
     public Action() {
     }
 
-    public Action(String NameAction) {
+    public Action(String actionName) {
         try {
-            setActionName(NameAction);
+            setActionName(actionName);
             id = ++count;
         } catch (NotCorrectNameExeption e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class Action implements IAction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Action action = (Action) o;
-        return actionName == action.actionName;
+        return actionName.equals(action.actionName);
     }
 
     public void setActionName(String actionName) throws NotCorrectNameExeption {

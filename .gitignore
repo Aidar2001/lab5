@@ -1,4 +1,11 @@
-/.idea/workspace.xml
-/data.xml
-/out/
-/target/
+# IntellIJ files
+.idea/
+*.iml
+
+# Output files
+out/
+target/
+
+# XML data files
+data.xml
+humans.xml
