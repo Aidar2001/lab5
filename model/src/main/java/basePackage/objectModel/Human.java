@@ -1,16 +1,14 @@
 package basePackage.objectModel;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.*;
 
 /**
  * General class of my object model. Extends extends <code>Creature</code> and implements <code>Comparable<Human></code>
@@ -23,6 +21,13 @@ import java.util.List;
 public class Human extends Creature implements Comparable<Human> {
     private static int count = 0;
     private static int number = 1;
+
+    /**
+     * Date of create human
+     */
+    @Getter
+    @Setter
+    private Date birthDate = new Date();
 
     @XmlAttribute
     @Getter

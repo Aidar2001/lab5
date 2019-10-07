@@ -25,6 +25,7 @@ public class Command {
         /**File with collection, witch we imported*/
         private File file;
 
+        private int humanId;
         private Human human;
     }
 }

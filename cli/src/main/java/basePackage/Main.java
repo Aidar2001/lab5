@@ -2,6 +2,7 @@ package basePackage;
 
 import basePackage.commander.CommandHandler;
 import basePackage.commander.CommandReader;
+import basePackage.connect.RequestResult;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -12,29 +13,17 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws JAXBException, IOException {
-        // import + pathFile
-        // readCommand -> CommandHandler
-        CommandHandler commandHandler = new CommandHandler();
+        Client client = new ClientImpl();
+        RequestResult<Void> result = client.connection("localhost", 6124);
+        if (!result.getSuccess()){
+            System.err.println("Connection error");
+            System.exit(-1);
+        }
+
+        CommandHandler commandHandler = new CommandHandler(client);
         CommandReader commandReader = new CommandReader();
-        String importCommand = "import " + getPathFromEnvironmentVariable();
-        commandHandler.handle(importCommand);
         while (true) {
             commandHandler.handle(commandReader.readCommand());
-        }
-    }
-
-    /**
-     * @return path to file with collection from environmental variable <code>PATH_TO_COLLECTION</code>,
-     * or null if environmental variable equal to null.
-     */
-    private static String getPathFromEnvironmentVariable() {
-        String collectionPath = System.getenv("PATH_TO_COLLECTION");
-        if (collectionPath == null) {
-            System.out.println("Path should be passed via environment variable PATH_TO_COLLECTION");
-            System.exit(1);
-            return null;
-        } else {
-            return collectionPath;
         }
     }
 

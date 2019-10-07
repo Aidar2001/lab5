@@ -35,10 +35,8 @@ public class XMLParser {
         if (humans != null && file != null) {
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(humans, new BufferedWriter(new FileWriter(file)));}
-//        } else {
-//            if (file)
-//        }
+            marshaller.marshal(humans, new BufferedWriter(new FileWriter(file)));
+        }
     }
 
     /**

@@ -11,5 +11,7 @@ public enum NameOfCommand {
     REMOVE_GREATER,
     HELP,
     IMPORT,
-    EXIT
+    EXIT,
+    SAVE,
+    LOAD;
 }

@@ -6,6 +6,7 @@ import basePackage.exeptions.NotFoundNameException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import lombok.Getter;
 
 /**
  * This is object model class with actions for human. It implemented IAction
@@ -24,6 +25,7 @@ public class Action implements IAction {
 
     /** id to identify actions*/
     @XmlAttribute
+    @Getter
     private int id;
 
     public Action() {

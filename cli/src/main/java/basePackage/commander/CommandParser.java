@@ -32,7 +32,10 @@ public class CommandParser {
                 File file = getFileByPath(rawArgument);
                 argument.setFile(file);
             } else {
-                argument.setHuman(mapper.readValue(rawArgument, Human.class));
+                if (isDigit(rawArgument)){
+                    argument.setHumanId(Integer.parseInt(rawArgument));
+                } else {argument.setHuman(mapper.readValue(rawArgument, Human.class));}
+
             }
             command.setArgument(argument);
         }
@@ -48,5 +51,14 @@ public class CommandParser {
     private File getFileByPath(String rawArgument) {
         return new File(rawArgument);
 
+    }
+
+    private boolean isDigit(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }
