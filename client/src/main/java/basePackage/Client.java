@@ -30,5 +30,7 @@ public interface Client {
 
     RequestResult<Boolean> load(String collectionToLoad);
 
+    RequestResult<Boolean> load();
+
     RequestResult<Boolean> save(String collectionToLoad);
 }

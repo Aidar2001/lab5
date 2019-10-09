@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Class save humans on <code>Vector<Human></code>.
@@ -20,5 +21,5 @@ import java.util.Vector;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Humans {
     @XmlElement(name = "human")
-    private Vector<Human> humans;
+    private CopyOnWriteArrayList<Human> humans;
 }

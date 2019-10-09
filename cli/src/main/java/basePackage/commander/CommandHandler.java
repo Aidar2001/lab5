@@ -68,7 +68,7 @@ public class CommandHandler {
                     if (result.getResult().equals(true)) {
                         System.out.println("Element was removed");
                     } else {
-                        System.out.println("Collection doesn't have person " + command.getArgument().getHuman());
+                        System.out.println("Collection doesn't have person wit id=" + command.getArgument().getHumanId());
                     }
                 } else {
                     System.err.println(getErrorMessage(result.getError()));
@@ -153,23 +153,34 @@ public class CommandHandler {
                 break;
 
             case IMPORT:
-                result = client.importFile(command.getArgument().getFile());
-                if (result.getSuccess()) {
-                    System.out.println("Humans from file was successfully imported to collection");
-                } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                try {
+                    result = client.importFile(command.getArgument().getFile());
+                    if (result.getSuccess()) {
+                        System.out.println("Humans from file was successfully imported to collection");
+                    } else {
+                        System.err.println(getErrorMessage(result.getError()));
+                    }
+                    break;
+                } catch (IllegalStateException e) {
+                    System.err.println(e.getMessage());
+                    return;
                 }
-                break;
 
             case LOAD:
                 String collectionToLoad = null;
                 if (rawCommand.contains(" ")) {
                     collectionToLoad = rawCommand.substring(rawCommand.indexOf(" ") + 1);
+                    result = client.load(collectionToLoad);
+                } else {
+                    result = client.load();
                 }
-                result = client.load(collectionToLoad);
                 if (result.getSuccess()) {
                     if (result.getResult().equals(true)) {
-                        System.out.println("Collection was successfully loaded. You work with " + collectionToLoad + " collection.");
+                        if (collectionToLoad == null) {
+                            System.out.println("Collection was successfully loaded. You work with default collection.");
+                        } else {
+                            System.out.println("Collection was successfully loaded. You work with " + collectionToLoad + " collection.");
+                        }
                     } else {
                         System.out.println("Collection with name " + collectionToLoad + " isn't on server.");
                     }
@@ -179,10 +190,13 @@ public class CommandHandler {
                 break;
 
             case SAVE:
-                String collectionToSave = rawCommand.substring(rawCommand.indexOf(" ") + 1);
+                String collectionToSave = null;
+                if (rawCommand.contains(" ")) {
+                    collectionToSave = rawCommand.substring(rawCommand.indexOf(" ") + 1);
+                }
                 result = client.save(collectionToSave);
                 if (result.getSuccess()) {
-                    System.out.println("Collection was successfully saved. You work with " + collectionToSave + " collection.");
+                    System.out.println("Collection was successfully saved.");
                 } else {
                     System.err.println("Error: collection wasn't saved. " + getErrorMessage(result.getError()));
                 }

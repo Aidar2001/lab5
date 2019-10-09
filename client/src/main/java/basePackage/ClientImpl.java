@@ -51,6 +51,7 @@ public class ClientImpl implements Client {
     try {
       socket = new Socket();
       socket.connect(new InetSocketAddress(host, port), CONNECTION_TIMEOUT);
+      socket.setSoTimeout(300_000);
 
       return readServer();
     } catch (IOException e) {
@@ -61,7 +62,7 @@ public class ClientImpl implements Client {
   @Override
   public RequestResult<Void> importFile(File file) {
     if (!file.exists() || !file.isFile()) {
-      throw new IllegalStateException();
+      throw new IllegalStateException(file.getName()+" doesn't exist or isn't file.");
     }
     XMLParser parser = new XMLParser();
     try {
@@ -149,7 +150,16 @@ public class ClientImpl implements Client {
   }
 
   @Override
+  public RequestResult<Boolean> load() {
+    Request request = new Request()
+            .withSignature(NameOfCommand.LOAD.toString());
+
+    return sendRequest(request);
+  }
+
+  @Override
   public RequestResult<Boolean> load(String collectionToLoad){
+    if (collectionToLoad==null){load();}
     Request request = new Request()
             .withSignature(NameOfCommand.LOAD.toString() + " " + collectionToLoad);
 

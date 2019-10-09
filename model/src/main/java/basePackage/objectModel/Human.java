@@ -118,7 +118,7 @@ public class Human extends Creature implements Comparable<Human> {
 
     @Override
     public int compareTo(Human o) {
-        return (name.compareTo(o.getName()) != 0) ? name.compareTo(o.getName()) : Integer.compare(id, o.id);
+        return name.compareTo(o.getName());
     }
 }
 

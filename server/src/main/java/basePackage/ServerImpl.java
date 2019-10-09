@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetDecoder;
@@ -18,7 +19,6 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class ServerImpl implements Server {
     private List<Thread> threads = new ArrayList<>();
@@ -43,11 +43,6 @@ public class ServerImpl implements Server {
             }
 
         }).start();
-    }
-
-    @Override
-    public CompletableFuture<Void> stop() {
-        return null;
     }
 
     private class SocketRunnable implements Runnable {
@@ -155,18 +150,19 @@ public class ServerImpl implements Server {
                         case LOAD:
                             try {
                                 if (args.length != 1) {
-                                    sendResponse(RequestResult.createFailResult(RequestError.WRONG_SIGNATURE));
-                                    break;
-                                } else if (args.length == 1) {
-                                    status = executor.loadCollection(args[0]);
+                                    if (args.length == 0) {
+                                        status = executor.loadCollection(null);
+                                    } else {
+                                        sendResponse(RequestResult.createFailResult(RequestError.WRONG_SIGNATURE));
+                                        break;
+                                    }
                                 } else {
-                                    status = executor.loadCollection(null);
+                                    status = executor.loadCollection(args[0]);
                                 }
                                 sendResponse(RequestResult.createSuccessResultWith(status));
                             } catch (JAXBException e) {
                                 sendResponse(RequestResult.createFailResult(RequestError.FILE_PARSE_ERROR));
                             }
-
                             break;
 
                         case EXIT:
@@ -193,6 +189,7 @@ public class ServerImpl implements Server {
                         sendResponse(RequestResult.createFailResult(e, RequestError.IO_ERROR));
                     } catch (IOException ex) {
                         ex.printStackTrace();
+                        break;
                     }
                 }
             }
@@ -212,11 +209,15 @@ public class ServerImpl implements Server {
 
             // byte buffer holding the size of charset
             ByteBuffer amount = ByteBuffer.allocate(Integer.BYTES).putInt(charset.capacity());
+            try {
+                // send size of charset
+                socket.getOutputStream().write(amount.array());
+                // and then send charset
+                socket.getOutputStream().write(charset.array());
+            } catch (SocketException e) {
+                threads.remove(Thread.currentThread());
+            }
 
-            // send size of charset
-            socket.getOutputStream().write(amount.array());
-            // and then send charset
-            socket.getOutputStream().write(charset.array());
         }
 
         private Request readClient() throws IOException {
