@@ -1,22 +1,17 @@
-package basePackage.connect;
+package basePackage.database.model;
 
-import basePackage.objectModel.Human;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Wither;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Data
 @Wither
 @AllArgsConstructor
 @NoArgsConstructor
-public class Request implements Serializable {
+public class User {
+    private int id;
     private String username;
+    private String email;
     private String passwordHash;
-
-    private String signature;
-    private List<Human> data;
 }

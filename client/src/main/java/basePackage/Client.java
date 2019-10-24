@@ -8,15 +8,19 @@ import java.io.File;
 import java.util.List;
 
 public interface Client {
-    RequestResult<Void> connection(String host, int port);
+    RequestResult<Void> connect(String username, String host, int port);
+
+    RequestResult<Boolean> login(String password);
+
+    RequestResult<Boolean> register(String email);
 
     RequestResult<Void> closeConnection();
 
-    RequestResult<Void> importFile(File file);
+    RequestResult<Boolean> importFile(File file);
 
-    RequestResult<Void> addHuman(Human human);
+    RequestResult<Boolean> addHuman(Human human);
 
-    RequestResult<Void> addIfMax(Human human);
+    RequestResult<Boolean> addIfMax(Human human);
 
     RequestResult<CollectionInfo> getInfo();
 
@@ -28,9 +32,9 @@ public interface Client {
 
     RequestResult<Boolean> removeFirst();
 
-    RequestResult<Boolean> load(String collectionToLoad);
-
+    //    RequestResult<Boolean> load(String collectionToLoad);
     RequestResult<Boolean> load();
 
-    RequestResult<Boolean> save(String collectionToLoad);
+    //    RequestResult<Boolean> save(String collectionToLoad);
+    RequestResult<Void> save();
 }

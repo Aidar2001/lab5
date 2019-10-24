@@ -24,7 +24,6 @@ public class Command {
     public class Argument {
         /**File with collection, witch we imported*/
         private File file;
-
         private int humanId;
         private Human human;
     }

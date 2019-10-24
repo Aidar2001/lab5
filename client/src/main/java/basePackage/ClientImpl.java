@@ -27,7 +27,10 @@ import static basePackage.connect.RequestError.*;
 
 public class ClientImpl implements Client {
 
-  private final static Integer CONNECTION_TIMEOUT = 10_000;
+  private final static Integer CONNECTION_TIMEOUT = 10_000*10_000*10;
+
+  private String username;
+  private String passwordHash;
 
   private Socket socket;
   private ObjectMapper mapper;
@@ -36,31 +39,53 @@ public class ClientImpl implements Client {
   private CharsetDecoder decoder;
 
   {
-    mapper = new ObjectMapper().registerModules();
+    mapper = new ObjectMapper().findAndRegisterModules();
     encoder = StandardCharsets.UTF_8.newEncoder();
     decoder = StandardCharsets.UTF_8.newDecoder();
   }
 
   @Override
-  public RequestResult<Void> connection(String host, int port) {
+  public RequestResult<Void> connect(String username, String host, int port) {
     Objects.requireNonNull(host);
     if (socket != null && socket.isConnected()) {
       throw new IllegalStateException("Socket is already connected.");
     }
 
+    this.username = Objects.requireNonNull(username);
+
     try {
       socket = new Socket();
       socket.connect(new InetSocketAddress(host, port), CONNECTION_TIMEOUT);
-      socket.setSoTimeout(300_000);
+      socket.setSoTimeout(CONNECTION_TIMEOUT);
+      RequestResult<Void> connectRequest = readServer();
 
-      return readServer();
+      sendRequest(new Request().withUsername(username));
+
+      return connectRequest;
     } catch (IOException e) {
       return RequestResult.createFailResult(e, IO_ERROR);
     }
   }
+  @Override
+  public RequestResult<Boolean> login(String password) {
+    String passwordHash = PasswordUtils.getPasswordHash(Objects.requireNonNull(password));
+
+    RequestResult<Boolean> loginResult = sendRequest(new Request().withSignature(NameOfCommand.LOGIN.toString()).withPasswordHash(passwordHash));
+    if(loginResult.getSuccess() && loginResult.getResult()) {
+      this.passwordHash = passwordHash;
+    }
+    return loginResult;
+  }
 
   @Override
-  public RequestResult<Void> importFile(File file) {
+  public RequestResult<Boolean> register(String email) {
+    Objects.requireNonNull(email);
+
+    return sendRequest(new Request().withSignature(NameOfCommand.REGISTER.toString() + " " + email));
+  }
+
+  @Override
+  public RequestResult<Boolean> importFile(File file) {
     if (!file.exists() || !file.isFile()) {
       throw new IllegalStateException(file.getName()+" doesn't exist or isn't file.");
     }
@@ -71,15 +96,14 @@ public class ClientImpl implements Client {
           .withSignature(NameOfCommand.IMPORT.toString())
           .withData(humans.getHumans());
 
-      RequestResult<Void> result = sendRequest(request);
-      return result;
+      return sendRequest(request);
     } catch (JAXBException e) {
       return RequestResult.createFailResult(e, FILE_PARSE_ERROR);
     }
   }
 
   @Override
-  public RequestResult<Void> addHuman(Human human) {
+  public RequestResult<Boolean> addHuman(Human human) {
     Objects.requireNonNull(human, "Added human should not be null!");
 
     Request request = new Request()
@@ -90,7 +114,7 @@ public class ClientImpl implements Client {
   }
 
   @Override
-  public RequestResult<Void> addIfMax(Human human) {
+  public RequestResult<Boolean> addIfMax(Human human) {
     Objects.requireNonNull(human, "Human should not be null");
 
     Request request = new Request()
@@ -158,26 +182,19 @@ public class ClientImpl implements Client {
   }
 
   @Override
-  public RequestResult<Boolean> load(String collectionToLoad){
-    if (collectionToLoad==null){load();}
-    Request request = new Request()
-            .withSignature(NameOfCommand.LOAD.toString() + " " + collectionToLoad);
-
+  public RequestResult<Void> save(){
+    Request request = new Request().withSignature(NameOfCommand.SAVE.toString());
     return sendRequest(request);
   }
-
-  @Override
-  public RequestResult<Boolean> save(String collectionToSave){
-    Request request = new Request()
-            .withSignature(NameOfCommand.SAVE.toString() + " " + collectionToSave);
-
-    return sendRequest(request);
-  }
-
 
 
   private synchronized <T> RequestResult<T> sendRequest(Request request) {
     try {
+      request.setUsername(username);
+
+      if(passwordHash != null)
+        request.setPasswordHash(passwordHash);
+
       // map request to json
       String json = mapper.writeValueAsString(request);
 

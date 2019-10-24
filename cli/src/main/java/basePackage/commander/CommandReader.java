@@ -8,12 +8,19 @@ import java.util.Scanner;
  */
 
 public class CommandReader {
+
+    private boolean firstTime = true;
     /**
      * @return string which was entered to console
      */
     public String readCommand() {
+        if(firstTime) {
+            System.out.println("Type 'help' to get list of commands");
+            firstTime = false;
+        }
+
         Scanner consoleScanner = new Scanner(System.in);
-        System.out.println("Enter command");
+        System.out.println("Enter a command:");
         while (true) {
             try {
                 return consoleScanner.nextLine().trim();

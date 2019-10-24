@@ -4,6 +4,7 @@ import basePackage.exeptions.NotCorrectNameExeption;
 import basePackage.exeptions.NotFoundNameException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,7 +16,7 @@ import java.util.*;
  * It's class professions. It implement Iprofession
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@AllArgsConstructor
+@AllArgsConstructor @NoArgsConstructor
 @Getter
 public class Profession implements IProfession {
     private static int count = 0;
@@ -25,9 +26,6 @@ public class Profession implements IProfession {
 
     @XmlAttribute
     private int id;
-
-    public Profession() {
-    }
 
     public Profession(String profession) {
         try {

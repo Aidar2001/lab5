@@ -12,7 +12,7 @@ import java.io.IOException;
  * This class parse command from console and use for this <code>ObjectMapper</code>.
  */
 public class CommandParser {
-    private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     /**
      * @param rawCommand
@@ -32,9 +32,11 @@ public class CommandParser {
                 File file = getFileByPath(rawArgument);
                 argument.setFile(file);
             } else {
-                if (isDigit(rawArgument)){
+                if (isDigit(rawArgument)) {
                     argument.setHumanId(Integer.parseInt(rawArgument));
-                } else {argument.setHuman(mapper.readValue(rawArgument, Human.class));}
+                } else {
+                    argument.setHuman(mapper.readValue(rawArgument, Human.class));
+                }
 
             }
             command.setArgument(argument);

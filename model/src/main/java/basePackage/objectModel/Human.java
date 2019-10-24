@@ -1,14 +1,17 @@
 package basePackage.objectModel;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-
-import lombok.*;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * General class of my object model. Extends extends <code>Creature</code> and implements <code>Comparable<Human></code>
@@ -18,6 +21,7 @@ import lombok.*;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @XmlAccessorType(XmlAccessType.FIELD)
+@Getter @Setter
 public class Human extends Creature implements Comparable<Human> {
     private static int count = 0;
     private static int number = 1;
@@ -25,12 +29,15 @@ public class Human extends Creature implements Comparable<Human> {
     /**
      * Date of create human
      */
-    @Getter
-    @Setter
-    private Date birthDate = new Date();
+    private ZonedDateTime creationTime = ZonedDateTime.now();
+    // LocalDate
+    // LocalTime
+    // с часовым поясом
+    // ZonedDateTime
+    // ZonedDate
+    // ZonedTime
 
     @XmlAttribute
-    @Getter
     private int id;
 
     /**
@@ -39,8 +46,6 @@ public class Human extends Creature implements Comparable<Human> {
      * @see IAction
      * @see Action
      */
-    @Getter
-    @Setter
     @XmlElement(name = "action", type = Action.class)
     private List<IAction> actions = new ArrayList<>();
 
@@ -50,15 +55,20 @@ public class Human extends Creature implements Comparable<Human> {
      * @see IProfession
      * @see Profession
      */
-    @Getter
-    @Setter
     @XmlElement(name = "profession", type = Profession.class)
     private List<IProfession> professions = new ArrayList<>();
 
-
-    @Setter
     @XmlElement
     private Location location;
+
+    public Human(int id, String name, Location location, List<IAction> actions, List<IProfession> professions, ZonedDateTime creationDate) {
+        super(name);
+        this.creationTime = creationDate;
+        this.id = id;
+        this.actions = actions;
+        this.professions = professions;
+        this.location = location;
+    }
 
     public Human(String name, Location location) {
         this(name);

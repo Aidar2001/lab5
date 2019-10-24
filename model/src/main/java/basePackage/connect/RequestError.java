@@ -16,7 +16,10 @@ public enum RequestError {
     JSON_PARSE_ERROR(4),
 
     WRONG_SIGNATURE(6),
-    WRONG_DATA(7);
+    WRONG_DATA(7),
+    NOT_AUTHORIZED(8),
+    DATABASE_ERROR(9),
+    ALREADY_REGISTERED(10);
 
     private static Map<Integer, RequestError> errorCodeToError = Stream.of(RequestError.values())
             .collect(Collectors.toMap(RequestError::getErrorCode, error -> error));

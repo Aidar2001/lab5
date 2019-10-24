@@ -7,6 +7,7 @@ import basePackage.connect.RequestResult;
 import basePackage.objectModel.Human;
 
 import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -21,10 +22,7 @@ public class CommandHandler {
 
     public CommandHandler(Client client) {
         this.client = client;
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            client.save(null);
-        }));
-        ;
+        Runtime.getRuntime().addShutdownHook(new Thread(client::save));
     }
 
     /**
@@ -45,120 +43,112 @@ public class CommandHandler {
             return;
         }
 
-        RequestResult result;
         switch (command.getNameOfCommand()) {
             case INFO:
-                result = client.getInfo();
-                if (result.getSuccess()) {
-                    CollectionInfo collectionInfo = result.getCollectionInfoResult();
+                RequestResult<CollectionInfo> infoResult = client.getInfo();
+                if (infoResult.getSuccess()) {
+                    CollectionInfo collectionInfo = infoResult.getCollectionInfoResult();
                     System.out.println(
                             "\tCollection name: " + collectionInfo.getCollectionName() + "\n" +
                                     "\tCollection type: " + collectionInfo.getCollectionType() + "\n" +
                                     "\tInitialization date: " + collectionInfo.getInitializationDate() + "\n" +
                                     "\tCollection size at the moment: " + collectionInfo.getCollectionSize());
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(infoResult.getError()));
                 }
                 ;
                 break;
 
             case REMOVE:
-                result = client.remove(command.getArgument().getHumanId());
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
+                RequestResult<Boolean> removeResult = client.remove(command.getArgument().getHumanId());
+                if (removeResult.getSuccess()) {
+                    if (removeResult.getResult()) {
                         System.out.println("Element was removed");
                     } else {
                         System.out.println("Collection doesn't have person wit id=" + command.getArgument().getHumanId());
                     }
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(removeResult.getError()));
                 }
                 break;
 
             case ADD:
-                result = client.addHuman(command.getArgument().getHuman());
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
+                RequestResult<Boolean> addResult = client.addHuman(command.getArgument().getHuman());
+                if (addResult.getSuccess()) {
+                    if (addResult.getResult()) {
                         System.out.println("Element was added");
                     } else {
                         System.out.println("Collection already has human with id=" + command.getArgument().getHuman().getId());
                     }
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(addResult.getError()));
                 }
                 break;
 
             case ADD_IF_MAX:
                 Human human = command.getArgument().getHuman();
-                result = client.addIfMax(human);
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
+                RequestResult<Boolean> addIfMaxResult = client.addIfMax(human);
+                if (addIfMaxResult.getSuccess()) {
+                    if (addIfMaxResult.getResult()) {
                         System.out.println("Element was added");
                     } else {
                         System.out.println("Collection already has human with id=" + human.getId() + " or" +
                                 " human " + human.getName() + "#" + human.getId() + " isn't max.");
                     }
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(addIfMaxResult.getError()));
                 }
                 break;
 
             case REMOVE_FIRST:
-                result = client.removeFirst();
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
+                RequestResult<Boolean> removeFirstResult = client.removeFirst();
+                if (removeFirstResult.getSuccess()) {
+                    if (removeFirstResult.getResult()) {
                         System.out.println("First element was removed");
                     } else {
                         System.out.println("Collection doesn't have any persons");
                     }
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(removeFirstResult.getError()));
                 }
                 break;
 
             case SHOW:
-                result = client.getAllHumans();
-                if (result.getSuccess()) {
-                    System.out.println(result.getHumansListResult());
+                RequestResult<List<Human>> showResult = client.getAllHumans();
+                if (showResult.getSuccess()) {
+                    showResult.getHumansListResult().forEach(System.out::println);
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(showResult.getError()));
                 }
                 break;
 
             case REMOVE_GREATER:
-                result = client.removeGreater(command.getArgument().getHuman());
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
+                RequestResult<Boolean> removeGreaterResult = client.removeGreater(command.getArgument().getHuman());
+                if (removeGreaterResult.getSuccess()) {
+                    if (removeGreaterResult.getResult()) {
                         System.out.println("Humans greater then " + command.getArgument().getHuman().getName() + "#" + command.getArgument().getHuman().getId()
-                                + "was successfully removed.");
+                                + " was successfully removed.");
                     }
                 } else {
-                    System.err.println(getErrorMessage(result.getError()));
+                    System.err.println(getErrorMessage(removeGreaterResult.getError()));
                 }
                 break;
 
             case HELP:
-                System.out.println(
-                        "\tremove [humans id]: remove an element from the collection by its id\n" +
-                                "\tinfo: show information about collection (type, initialization date , number of items  etc.)\n" +
-                                "\tadd {element}: add new item to collection on server\n" +
-                                "\tadd_if_max {element}: add a new element to the collection, if its value exceeds the the value of largest element of this collection\n" +
-                                "\tremove_greater {element}: remove from the collection, all elements that exceed specified\n" +
-                                "\tshow: вывести show all elements of the collection in the string view\n" +
-                                "\tremove_first: remove first element of collection\n" +
-                                "\timport [XML file]: add humans from XML to collection on server \n " +
-                                "\tload [file with collection]: load file with name \"file with collection\" to work with it. Without argument load default file\n" +
-                                "\tsave [file name]: save collection to file with name \"file name\". Without argument save to file which you work now." +
-                                "\texit: end the session");
+                printHelp();
                 break;
 
             case IMPORT:
                 try {
-                    result = client.importFile(command.getArgument().getFile());
-                    if (result.getSuccess()) {
-                        System.out.println("Humans from file was successfully imported to collection");
+                    RequestResult<Boolean> importResult = client.importFile(command.getArgument().getFile());
+                    if (importResult.getSuccess()) {
+                        if(importResult.getResult()) {
+                            System.out.println("Humans from file was successfully imported to collection");
+                        } else {
+                            System.out.println("Humans were added. But not all");
+                        }
                     } else {
-                        System.err.println(getErrorMessage(result.getError()));
+                        System.err.println(getErrorMessage(importResult.getError()));
                     }
                     break;
                 } catch (IllegalStateException e) {
@@ -167,45 +157,31 @@ public class CommandHandler {
                 }
 
             case LOAD:
-                String collectionToLoad = null;
-                if (rawCommand.contains(" ")) {
-                    collectionToLoad = rawCommand.substring(rawCommand.indexOf(" ") + 1);
-                    result = client.load(collectionToLoad);
-                } else {
-                    result = client.load();
-                }
-                if (result.getSuccess()) {
-                    if (result.getResult().equals(true)) {
-                        if (collectionToLoad == null) {
-                            System.out.println("Collection was successfully loaded. You work with default collection.");
-                        } else {
-                            System.out.println("Collection was successfully loaded. You work with " + collectionToLoad + " collection.");
-                        }
+                RequestResult<Boolean> loadResult = client.load();
+                if (loadResult.getSuccess()) {
+                    if (loadResult.getResult()) {
+                        System.out.println("Collection was successfully loaded. You work with default collection.");
                     } else {
-                        System.out.println("Collection with name " + collectionToLoad + " isn't on server.");
+//                        System.out.println("Collection with name " + collectionToLoad + " isn't on server.");
                     }
                 } else {
-                    System.err.println("Error: collection wasn't loaded. " + getErrorMessage(result.getError()));
+                    System.err.println("Error: collection wasn't loaded. " + getErrorMessage(loadResult.getError()));
                 }
                 break;
 
             case SAVE:
-                String collectionToSave = null;
-                if (rawCommand.contains(" ")) {
-                    collectionToSave = rawCommand.substring(rawCommand.indexOf(" ") + 1);
-                }
-                result = client.save(collectionToSave);
-                if (result.getSuccess()) {
+                RequestResult<Void> saveResult = client.save();
+                if (saveResult.getSuccess()) {
                     System.out.println("Collection was successfully saved.");
                 } else {
-                    System.err.println("Error: collection wasn't saved. " + getErrorMessage(result.getError()));
+                    System.err.println("Error: collection wasn't saved. " + getErrorMessage(saveResult.getError()));
                 }
 
                 break;
 
             case EXIT:
-                result = client.closeConnection();
-                if (result.getSuccess()) {
+                RequestResult<Void> closeConnectionResult = client.closeConnection();
+                if (closeConnectionResult.getSuccess()) {
                     System.out.println("Changes was successfully saved.");
                     System.exit(0);
                 } else {
@@ -215,6 +191,21 @@ public class CommandHandler {
                 break;
         }
 
+    }
+
+    private static void printHelp() {
+        System.out.println(
+                "\tremove [humans id]: remove an element from the collection by its id\n" +
+                        "\tinfo: show information about collection (type, initialization date , number of items  etc.)\n" +
+                        "\tadd {element}: add new item to collection on server\n" +
+                        "\tadd_if_max {element}: add a new element to the collection, if its value exceeds the the value of largest element of this collection\n" +
+                        "\tremove_greater {element}: remove from the collection, all elements that exceed specified\n" +
+                        "\tshow: вывести show all elements of the collection in the string view\n" +
+                        "\tremove_first: remove first element of collection\n" +
+                        "\timport [XML file]: add humans from XML to collection on server \n " +
+                        "\tload [file with collection]: load file with name \"file with collection\" to work with it. Without argument load default file\n" +
+                        "\tsave [file name]: save collection to file with name \"file name\". Without argument save to file which you work now." +
+                        "\texit: end the session");
     }
 
     private static String getErrorMessage(RequestError error) {

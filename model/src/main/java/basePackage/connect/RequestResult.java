@@ -2,21 +2,21 @@ package basePackage.connect;
 
 import basePackage.objectModel.Human;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Wither;
+
+import java.util.List;
 
 @Data
 @Wither
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestResult<T> {
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper = new ObjectMapper().findAndRegisterModules();
 
     private Boolean success;
 

@@ -15,7 +15,7 @@ import java.io.IOException;
  * It's class to parse to/from XML.
  */
 public class XMLParser {
-    JAXBContext context;
+    private JAXBContext context;
 
     {
         try {

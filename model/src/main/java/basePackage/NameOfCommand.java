@@ -13,5 +13,7 @@ public enum NameOfCommand {
     IMPORT,
     EXIT,
     SAVE,
-    LOAD;
+    LOAD,
+    LOGIN,
+    REGISTER;
 }
